@@ -54,10 +54,7 @@ Stage::Stage() {
   _z_stepper.setAcceleration(1000.0);
   _z_stepper.setMaxSpeed(1000.0);
   
-  calibrated = false;
-  re_selection_changed = 1;
-  re_a_last = HIGH;
-  
+  calibrated = false;  
 }
 
 void Stage::begin()
@@ -79,10 +76,6 @@ void Stage::begin()
 
 void Stage::loop()
 {
-  
-  //Check for manual commands
-  manualControl();
-  
   //Test limit switches to prevent driving stage past limits
   if(!digitalRead(Z_ULIMIT_SWITCH) && (_z_stepper.distanceToGo() > 0)){
     _z_stepper.move(0);
@@ -95,68 +88,6 @@ void Stage::loop()
   _x_stepper.run();
   _y_stepper.run();
   _z_stepper.run();
-  
-}
-
-void Stage::manualControl()
-{
-  //Allows manual control of the stage position using buttons
-  boolean up_switch_state = digitalRead(Z_UP_SWITCH);
-  boolean down_switch_state = digitalRead(Z_DOWN_SWITCH);
-  
-  //Do nothing if both switches pressed
-  if(!down_switch_state && !up_switch_state) {
-    manual_control = false;
-    Move(Z_STEPPER, 0);
-  }
-  else if(!up_switch_state) {
-    manual_control = true;
-    Move(Z_STEPPER, 1000);    
-  }
-  else if(!down_switch_state) {
-    manual_control = true;
-    Move(Z_STEPPER, -1000);
-  }
-  else if(manual_control) {
-    //Prevents overriding of serial commands
-    manual_control = false;
-    Move(Z_STEPPER, 0);
-  }
-  
-  //Rotary Encoder Axis Selection
-  //Debounce input, check if going from high to low, then cycle selection.
-  int re_reading = digitalRead(ROTARY_ENCODER_SWITCH);
- 
-  if(re_reading != re_last_reading){
-    re_debounce_time = millis();
-  }  
-  if ((millis() - re_debounce_time) > 50) {
-    re_state = re_reading;
-    if((re_state == 0) && (re_last_state == 1)) {
-      if(re_selection == Z_STEPPER) {
-        re_selection = X_STEPPER;
-      }
-      else {
-        re_selection++;
-      }
-      re_selection_changed = 1;      
-    }
-    re_last_state=re_state;
-  }
-  
-  re_last_reading = re_reading;
-  
-  //Rotary Encoder rotation reading
-  int n = digitalRead(ROTARY_ENCODER_A);
-  if ((re_a_last == HIGH) && (n == LOW)) {
-    if (digitalRead(ROTARY_ENCODER_B) == HIGH) {
-      Move(re_selection, -1);
-    }
-    else {
-      Move(re_selection, 1);
-    }
-  }
-  re_a_last = n;
   
 }
 
