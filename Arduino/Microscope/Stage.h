@@ -14,11 +14,15 @@
 //Define pins
 #define Z_UP_SWITCH 7
 #define Z_DOWN_SWITCH 6
-#define Z_ULIMIT_SWITCH 5
-#define Z_LLIMIT_SWITCH 4
-#define ROTARY_ENCODER_A 8
-#define ROTARY_ENCODER_B 9
-#define ROTARY_ENCODER_SWITCH 10
+
+#define X_ULIMIT_SWITCH 13
+#define X_LLIMIT_SWITCH 12
+
+#define Y_ULIMIT_SWITCH 11
+#define Y_LLIMIT_SWITCH 10
+
+#define Z_ULIMIT_SWITCH 9
+#define Z_LLIMIT_SWITCH 8
 
 //Define motor selections
 #define X_STEPPER 0

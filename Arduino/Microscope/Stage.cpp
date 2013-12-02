@@ -30,6 +30,10 @@ void Stage::begin()
   top_afms.begin();
   
   //Setup pins for input
+  pinMode(X_ULIMIT_SWITCH, INPUT_PULLUP);
+  pinMode(X_LLIMIT_SWITCH, INPUT_PULLUP);
+  pinMode(Y_ULIMIT_SWITCH, INPUT_PULLUP);
+  pinMode(Y_LLIMIT_SWITCH, INPUT_PULLUP);
   pinMode(Z_ULIMIT_SWITCH, INPUT_PULLUP);
   pinMode(Z_LLIMIT_SWITCH, INPUT_PULLUP);
   pinMode(Z_UP_SWITCH, INPUT_PULLUP);
@@ -51,6 +55,18 @@ void Stage::loop()
   manualControl();
   
   //Test limit switches to prevent driving stage past limits
+  if(!digitalRead(X_ULIMIT_SWITCH) && (getDistanceToGo(X_STEPPER) > 0)){
+    Move(X_STEPPER,0);
+  }
+  if(!digitalRead(X_LLIMIT_SWITCH) && (getDistanceToGo(X_STEPPER) < 0)){
+     Move(X_STEPPER,0);;
+  }
+  if(!digitalRead(Y_ULIMIT_SWITCH) && (getDistanceToGo(Y_STEPPER) > 0)){
+    Move(Y_STEPPER,0);
+  }
+  if(!digitalRead(Y_LLIMIT_SWITCH) && (getDistanceToGo(Y_STEPPER) < 0)){
+     Move(Y_STEPPER,0);;
+  }
   if(!digitalRead(Z_ULIMIT_SWITCH) && (getDistanceToGo(Z_STEPPER) > 0)){
     Move(Z_STEPPER,0);
   }
