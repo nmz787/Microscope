@@ -45,6 +45,9 @@ void Stage::begin()
   
   _xy_interval = 15;
   _z_interval = 1;
+  
+  _x_stick_centre = analogRead(X_ANALOGUE);
+  _y_stick_centre = analogRead(Y_ANALOGUE);
 
 }
 
@@ -160,22 +163,39 @@ void Stage::manualControl()
   
   //Do nothing if both switches pressed
   if(!down_switch_state && !up_switch_state) {
-    manual_control = false;
+    z_manual_control = false;
     Move(Z_STEPPER, 0);
   }
   else if(!up_switch_state) {
-    manual_control = true;
+    z_manual_control = true;
     Move(Z_STEPPER, 1000);    
   }
   else if(!down_switch_state) {
-    manual_control = true;
+    z_manual_control = true;
     Move(Z_STEPPER, -1000);
   }
-  else if(manual_control) {
+  else if(z_manual_control) {
     //Prevents overriding of serial commands
-    manual_control = false;
+    z_manual_control = false;
     Move(Z_STEPPER, 0);
   }
+  
+  int x_stick = analogRead(X_ANALOGUE);
+  x_stick =- _x_stick_centre;
+  
+  if(x_stick > ANALOGUE_DZ){
+    x_manual_control = true;
+    Move(X_STEPPER, 1000);
+  }
+  else if(x_stick < -ANALOGUE_DZ){
+    x_manual_control = true;
+    Move(X_STEPPER, -1000);
+  }
+  else if(x_manual_control){
+    x_manual_control = false;
+    Move(X_STEPPER, 0);
+  }
+  
   
 }
 

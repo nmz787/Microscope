@@ -24,6 +24,12 @@
 #define Z_ULIMIT_SWITCH 9
 #define Z_LLIMIT_SWITCH 8
 
+#define X_ANALOGUE 0
+#define Y_ANALOGUE 1
+
+//Analogue dead zone
+#define ANALOGUE_DZ 10
+
 //Define motor selections
 #define X_STEPPER 0
 #define Y_STEPPER 1
@@ -32,7 +38,9 @@
 class Stage
 {
   public:
-    boolean manual_control;
+    boolean x_manual_control;
+    boolean y_manual_control;
+    boolean z_manual_control;
     boolean calibrated;
       
     Stage();
@@ -53,6 +61,9 @@ class Stage
     
     
   private:
+  
+    int _x_stick_centre;
+    int _y_stick_centre;
   
     long _x_pos;
     long _y_pos;
